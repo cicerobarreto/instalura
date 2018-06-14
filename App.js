@@ -1,58 +1,60 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
   Text,
-  View
+  View,
+  Image,
+  FlatList,
+  StyleSheet,
+  Dimensions
 } from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
+const width = Dimensions.get('screen').width;
 
 export default class App extends Component {
   render() {
+    const fotos = [{ id: 1, ususario: 'Cícero' },
+    { id: 2, ususario: 'João' },
+    { id: 3, ususario: 'Luíza' }];
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to Mr Waiter!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
+      <FlatList style={styles.conteiner}
+        keyExtractor={item => `${item.id}`}
+        data={fotos}
+        renderItem={({ item }) =>
+          <View>
+            <View style={styles.cabecalho}>
+              <Image source={require('./resources/img/foto1.jpg')}
+                style={styles.fotoPerfil} />
+              <Text> {item.ususario} </Text>
+            </View>
+            <Image source={require('./resources/img/foto1.jpg')}
+              style={styles.foto} />
+          </View>
+        }
+      />
     );
   }
 }
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+  conteiner: {
+    marginTop: 20
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
+  cabecalho: {
     margin: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  fotoPerfil: {
+    margin: 10,
+    borderRadius: 20,
+    width: 40,
+    height: 40
   },
+  foto: {
+    width: width,
+    height: width
+  }
+
 });
