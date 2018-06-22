@@ -8,53 +8,38 @@ import {
   Dimensions
 } from 'react-native';
 
-const width = Dimensions.get('screen').width;
+import Post from './src/componentes/post'
 
 export default class App extends Component {
-  render() {
-    const fotos = [{ id: 1, ususario: 'Cícero' },
-    { id: 2, ususario: 'João' },
-    { id: 3, ususario: 'Luíza' }];
 
+  constructor() {
+    super();
+    this.state = {
+      fotos: []
+    }
+  }
+
+  componentDidMount() {
+    fetch('https://instalura-api.herokuapp.com/api/public/fotos/rafael')
+    .then(resposta => resposta.json())
+    .then(json => this.setState({fotos: json}))    
+  }
+
+  render() {
     return (
       <FlatList style={styles.conteiner}
         keyExtractor={item => `${item.id}`}
-        data={fotos}
+        data={this.state.fotos}
         renderItem={({ item }) =>
-          <View>
-            <View style={styles.cabecalho}>
-              <Image source={require('./resources/img/foto1.jpg')}
-                style={styles.fotoPerfil} />
-              <Text> {item.ususario} </Text>
-            </View>
-            <Image source={require('./resources/img/foto1.jpg')}
-              style={styles.foto} />
-          </View>
+          <Post foto={item} />
         }
       />
     );
   }
 }
 
-
 const styles = StyleSheet.create({
   conteiner: {
     marginTop: 20
-  },
-  cabecalho: {
-    margin: 10,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  fotoPerfil: {
-    margin: 10,
-    borderRadius: 20,
-    width: 40,
-    height: 40
-  },
-  foto: {
-    width: width,
-    height: width
   }
-
 });
