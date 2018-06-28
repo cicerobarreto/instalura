@@ -16,6 +16,7 @@ export default class Post extends Component {
         super(props);
         this.state = {
             foto: this.props.foto
+            
         }
     }
 
