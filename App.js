@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
-  Image,
   FlatList,
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native';
 
 import Post from './src/componentes/post'

@@ -16,30 +16,68 @@ export default class Post extends Component {
         super(props);
         this.state = {
             foto: this.props.foto
-            
+
         }
     }
 
     carrgaIcone(likeada) {
         return likeada ? require('../../resources/img/s2-checked.png') : require('../../resources/img/s2.png')
     }
-    funcLike () {
-        const fotoAtualizada = {
-            ...this.state.foto,
-            likeada: !this.state.foto.likeada
+
+    funcLike() {
+        const { foto } = this.state;
+        let novaLista = []
+
+        if (!foto.likeada) {
+            novaLista = [...novaLista,{ login: 'Usuário' }]
+        } else {
+            novaLista = foto.likers.filter(liker => {
+                return liker.login !== 'Usuário'
+            })
         }
-        this.setState({foto: fotoAtualizada})
+
+        const fotoAtualizada = {
+            ...foto,
+            likeada: !foto.likeada,
+            likers: novaLista
+        }
+
+        this.setState({ foto: fotoAtualizada })
+    }
+
+    exibirLikers(likers) {
+        if (likers.length == 0) {
+            return;
+        } else {
+            return (
+                <Text style={styles.likes}>
+                    {likers.length} {likers.length > 1 ? 'curtidas' : 'curtida'}
+                </Text>
+            );
+        }
+
+    }
+
+    exibirComentarios(foto) {
+        if (foto.comentario === '')
+            return;
+        return (
+            <View style={styles.comentario}>
+                <Text style={styles.tituloComentario}>{foto.loginUsuario}</Text>
+                <Text>{foto.comentario}</Text>
+            </View>
+        );
     }
 
     render() {
         const { foto } = this.state;
-        
+
         return (
             <View>
                 <View style={styles.cabecalho}>
                     <Image source={{ uri: foto.urlPerfil }}
                         style={styles.fotoPerfil} />
-                    <Text> {this.props.foto.loginUsuario} </Text>
+                    <Text> {foto.loginUsuario} </Text>
                 </View>
                 <Image source={{ uri: foto.urlFoto }}
                     style={styles.foto} />
@@ -48,6 +86,10 @@ export default class Post extends Component {
                     <TouchableOpacity onPress={this.funcLike.bind(this)}>
                         <Image source={this.carrgaIcone(foto.likeada)} style={styles.botaoLike} />
                     </TouchableOpacity>
+
+                    {this.exibirLikers(foto.likers)}
+                    {this.exibirComentarios(foto)}
+
                 </View>
             </View>
         );
@@ -76,13 +118,27 @@ const styles = StyleSheet.create({
     },
 
     botaoLike: {
+        marginBottom: 10,
         height: 40,
         width: 40
     },
 
     rodape: {
         margin: 10
-    }
+    },
 
+    likes: {
+        fontWeight: 'bold'
+    },
+
+    comentario: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+
+    tituloComentario: {
+        fontWeight: 'bold',
+        marginRight: 5
+    }
 
 });
