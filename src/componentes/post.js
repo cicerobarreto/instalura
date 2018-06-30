@@ -5,7 +5,8 @@ import {
     Image,
     StyleSheet,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    TextInput
 } from 'react-native';
 
 const width = Dimensions.get('screen').width;
@@ -15,8 +16,7 @@ export default class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            foto: this.props.foto
-
+            foto: { ...this.props.foto, comentarios: [{ id: 1, login: 'Zé', texto: 'Gostei da foto' }] }
         }
     }
 
@@ -29,7 +29,7 @@ export default class Post extends Component {
         let novaLista = []
 
         if (!foto.likeada) {
-            novaLista = [...novaLista,{ login: 'Usuário' }]
+            novaLista = [...novaLista, { login: 'Usuário' }]
         } else {
             novaLista = foto.likers.filter(liker => {
                 return liker.login !== 'Usuário'
@@ -90,6 +90,19 @@ export default class Post extends Component {
                     {this.exibirLikers(foto.likers)}
                     {this.exibirComentarios(foto)}
 
+                    {foto.comentarios.map(comentario =>
+                        <View key={comentario.id} style={styles.comentario}>
+                            <Text style={styles.tituloComentario}>{comentario.login}</Text>
+                            <Text>{comentario.texto}</Text>
+                        </View>
+                    )}
+
+                    <View style={styles.novoComentario}>
+                        <TextInput style={styles.input} placeholder='adicione um comentário' />
+                        <Image
+                            style={styles.imgSend}
+                            source={require('../../resources/img/send.png')} />
+                    </View>    
                 </View>
             </View>
         );
@@ -132,13 +145,31 @@ const styles = StyleSheet.create({
     },
 
     comentario: {
+        flexDirection: 'row'
+    },
+
+    novoComentario: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd'
+
     },
 
     tituloComentario: {
         fontWeight: 'bold',
         marginRight: 5
+    },
+
+    input: {    
+        height: 40,
+        flex:1
+    },
+
+    imgSend: {
+        margin: 10,
+        width: 30,
+        height: 30     
     }
 
 });
